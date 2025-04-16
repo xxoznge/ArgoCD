@@ -1,0 +1,91 @@
+---
+# shop svc
+apiVersion: v1
+kind: Service
+metadata:
+  name: aws9-svc-shop
+spec:
+  selector:
+    app: aws9
+    version: blue
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+# shop deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws9-deploy-blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aws9
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: aws9
+        version: blue
+    spec:
+      containers:
+        - name: aws9-blue-container
+          image: xxoznge0929/aws9:blue
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "32Mi"
+            limits:
+              cpu: "500m"
+              memory: "64Mi"
+---
+# blog svc
+apiVersion: v1
+kind: Service
+metadata:
+  name: aws9-svc-blog
+spec:
+  selector:
+    app: aws9
+    version: green
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+# blog deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws9-deploy-green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aws9
+      version: green
+  template:
+    metadata:
+      labels:
+        app: aws9
+        version: green
+    spec:
+      containers:
+        - name: aws9-green-container
+          image: xxoznge0929/aws9:green
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "32Mi"
+            limits:
+              cpu: "500m"
+              memory: "64Mi"
